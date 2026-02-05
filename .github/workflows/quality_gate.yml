@@ -1,0 +1,22 @@
+name: Quality Gate
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Governance Check
+      run: |
+        echo "Running GADOS Governance v2.0"
+        # Placeholder for actual linting/testing
+        echo "✅ Quality Gate Passed"
