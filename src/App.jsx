@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import GuardianShield from './components/GuardianShield';
+import AgentHub from './components/AgentHub';
 import { ArrowLeft, ArrowRight, RotateCw, Globe, Shield } from 'lucide-react';
 
 // Use window.aegis exposed from preload
@@ -148,6 +149,9 @@ const App = () => {
                                 <div className={`h-full transition-all duration-1000 ${secureScore === 100 ? 'bg-green-500 w-full' : secureScore >= 60 ? 'bg-yellow-500 w-[60%]' : 'bg-red-500 w-[20%]'}`}></div>
                             </div>
                         </div>
+
+                        {/* Agentic Hub Integration */}
+                        <AgentHub />
 
                         {/* Live Log */}
                         <div className="font-mono text-[10px] text-gray-400 space-y-1">
