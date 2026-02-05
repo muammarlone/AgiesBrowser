@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - GADOS V3</title>
+    <link rel="stylesheet" href="/static/gados/tokens.css">
+    <style>
+        .gados-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--gados-space-lg);
+        }
+        .gados-header {
+            border-bottom: 1px solid var(--gados-border);
+            padding-bottom: var(--gados-space-md);
+            margin-bottom: var(--gados-space-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gados-status-pill {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--gados-surface);
+            border: 1px solid var(--gados-border);
+        }
+    </style>
+</head>
+<body class="gados-v3">
+    <div class="gados-container">
+        <header class="gados-header">
+            <h1>{{ app_name }}</h1>
+            <div class="gados-status-pill">
+                <span style="color: var(--gados-success)">●</span> GOLD STANDARD
+            </div>
+        </header>
+        <main class="gados-card">
+            {% block content %}{% endblock %}
+        </main>
+        <footer style="margin-top: 40px; color: var(--gados-text-muted); font-size: 12px; text-align: center;">
+            GADOS V3 Ecosystem • Verified by Genius/KIW
+        </footer>
+    </div>
+</body>
+</html>

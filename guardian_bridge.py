@@ -92,13 +92,31 @@ async def scan(url: str, content: str) -> Dict[str, Any]:
         }
 
 if __name__ == "__main__":
-    # Expect JSON input from stdin or args
-    # Usage: python guardian_bridge.py <URL> <Content>
-    # Or just stdin
+    # PERSISTENT SENTINEL MODE
+    # Reads JSON requests from Stdin forever.
+    # Solves "Spawn Storm" by keeping one process alive.
     
-    target_url = sys.argv[1] if len(sys.argv) > 1 else "about:blank"
-    # Basic simulation of content fetch if not provided (Electron should provide it)
-    target_content = sys.argv[2] if len(sys.argv) > 2 else "<html><body>Safe Content</body></html>"
-    
-    result = asyncio.run(scan(target_url, target_content))
-    print(json.dumps(result))
+    # sys.stdin is treated as a stream of newline-delimited JSON
+    for line in sys.stdin:
+        line = line.strip()
+        if not line:
+            continue
+            
+        try:
+            req = json.loads(line)
+            url = req.get("url", "about:blank")
+            content = req.get("content", "")
+            
+            # Execute Scan
+            result = asyncio.run(scan(url, content))
+            
+            # Write Response
+            print(json.dumps(result))
+            sys.stdout.flush() # CRITICAL: Ensure Electron gets the data immediately
+            
+        except json.JSONDecodeError:
+            print(json.dumps({"error": "Invalid JSON Input"}))
+            sys.stdout.flush()
+        except Exception as e:
+            print(json.dumps({"error": f"Bridge Error: {str(e)}"}))
+            sys.stdout.flush()

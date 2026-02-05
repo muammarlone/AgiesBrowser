@@ -1,0 +1,59 @@
+:root {
+    /* GADOS V3 Standard Tokens */
+    --gados-primary: #2563eb;
+    --gados-primary-hover: #1d4ed8;
+    --gados-bg: #0f172a;
+    --gados-surface: #1e293b;
+    --gados-text: #f8fafc;
+    --gados-text-muted: #94a3b8;
+    --gados-border: #334155;
+    --gados-success: #10b981;
+    --gados-warning: #f59e0b;
+    --gados-error: #ef4444;
+
+    /* Spacing */
+    --gados-space-xs: 4px;
+    --gados-space-sm: 8px;
+    --gados-space-md: 16px;
+    --gados-space-lg: 24px;
+
+    /* Animations */
+    --gados-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.gados-v3 {
+    background-color: var(--gados-bg);
+    color: var(--gados-text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.gados-card {
+    background: var(--gados-surface);
+    border: 1px solid var(--gados-border);
+    border-radius: 8px;
+    padding: var(--gados-space-md);
+    transition: var(--gados-transition);
+}
+
+.gados-card:hover {
+    border-color: var(--gados-primary);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.gados-btn {
+    background: var(--gados-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--gados-transition);
+}
+
+.gados-btn:hover {
+    background: var(--gados-primary-hover);
+    transform: translateY(-1px);
+}
