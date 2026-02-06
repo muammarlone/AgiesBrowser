@@ -91,32 +91,53 @@ async def scan(url: str, content: str) -> Dict[str, Any]:
             "timestamp": "Now"
         }
 
-if __name__ == "__main__":
-    # PERSISTENT SENTINEL MODE
-    # Reads JSON requests from Stdin forever.
-    # Solves "Spawn Storm" by keeping one process alive.
+# PERSISTENT SENTINEL & ONE-SHOT HYBRID MODE
+    # Logic: If args are present, run ONCE. If not, run DAEMON.
     
-    # sys.stdin is treated as a stream of newline-delimited JSON
-    for line in sys.stdin:
-        line = line.strip()
-        if not line:
-            continue
+    if len(sys.argv) > 1:
+        # --- MODE A: ONE-SHOT (Legacy/CLI) ---
+        target_url = sys.argv[1]
+        target_content = sys.argv[2] if len(sys.argv) > 2 else ""
+        
+        # Execute Scan
+        result = asyncio.run(scan(target_url, target_content))
+        
+        # Output to Stdout
+        print(json.dumps(result))
+        
+        # GENIUS FIX: Force Write Evidence to Disk (The "Black Box" Protocol)
+        with open("evidence_dump.json", "w", encoding="utf-8") as f:
+            json.dump(result, f, indent=2)
             
-        try:
-            req = json.loads(line)
-            url = req.get("url", "about:blank")
-            content = req.get("content", "")
-            
-            # Execute Scan
-            result = asyncio.run(scan(url, content))
-            
-            # Write Response
-            print(json.dumps(result))
-            sys.stdout.flush() # CRITICAL: Ensure Electron gets the data immediately
-            
-        except json.JSONDecodeError:
-            print(json.dumps({"error": "Invalid JSON Input"}))
-            sys.stdout.flush()
-        except Exception as e:
-            print(json.dumps({"error": f"Bridge Error: {str(e)}"}))
-            sys.stdout.flush()
+    else:
+        # --- MODE B: SENTINEL DAEMON (New Architecture) ---
+        # sys.stdin is treated as a stream of newline-delimited JSON
+        for line in sys.stdin:
+            line = line.strip()
+            if not line:
+                continue
+                
+            try:
+                req = json.loads(line)
+                url = req.get("url", "about:blank")
+                content = req.get("content", "")
+                
+                # Execute Scan
+                result = asyncio.run(scan(url, content))
+                
+                # Write Response
+                print(json.dumps(result))
+                sys.stdout.flush() # CRITICAL: Ensure Electron gets the data immediately
+                
+                # Log to evidence file (append mode for stream)
+                with open("evidence_stream.log", "a", encoding="utf-8") as f:
+                    f.write(json.dumps(result) + "\n")
+                
+            except json.JSONDecodeError:
+                err = {"error": "Invalid JSON Input"}
+                print(json.dumps(err))
+                sys.stdout.flush()
+            except Exception as e:
+                err = {"error": f"Bridge Error: {str(e)}"}
+                print(json.dumps(err))
+                sys.stdout.flush()
